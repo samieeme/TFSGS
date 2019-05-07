@@ -8,7 +8,7 @@ import numpy as np
 from math import pi, gamma
 from astropy.convolution import convolve
 from functions import remain, deriv_x, deriv_y, deriv_z, div, \
-    Fractional_Laplacian_2, Reduce_period
+    Fractional_Laplacian_2, Reduce_period, Tempered_Fractional_Laplacian_2
     
 class Model (object):
     
@@ -110,4 +110,15 @@ class Model (object):
         s_fL_x = -mu/8. * Fractional_Laplacian_2(self.vxhat,self.Nnod,alpha)
         s_fL_y = -mu/8. * Fractional_Laplacian_2(self.vyhat,self.Nnod,alpha)
         s_fL_z = -mu/8. * Fractional_Laplacian_2(self.vzhat,self.Nnod,alpha)
+        return s_fL_x,s_fL_y,s_fL_z
+    
+    def Tempered_Fractional_Laplacian(self,alpha,Lambda):
+        nu = 0.000185
+        tau = (6*nu+1)/2
+        mu = (0.1 - 10)/0.9 *(alpha - 2.0) * \
+        (2**(alpha)*gamma((alpha+3.)/2.))/np.pi**(3.0/2.0) \
+        *np.abs(gamma(-alpha/2.))*gamma(alpha+1)*tau**(alpha-1)
+        s_fL_x = -mu/8. * Tempered_Fractional_Laplacian_2(self.vxhat,self.Nnod,alpha,Lambda)
+        s_fL_y = -mu/8. * Tempered_Fractional_Laplacian_2(self.vyhat,self.Nnod,alpha,Lambda)
+        s_fL_z = -mu/8. * Tempered_Fractional_Laplacian_2(self.vzhat,self.Nnod,alpha,Lambda)
         return s_fL_x,s_fL_y,s_fL_z

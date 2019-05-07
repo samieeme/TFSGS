@@ -78,9 +78,9 @@ class Solver_filtered_field(object):
         plt.colorbar()
         plt.show()
 #%%
-Rs = str(128)
+Rs = str(32)
 
-filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/t-0/DNS_"+ Rs
+filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/t-1000/DNS_"+ Rs
 
 
 solver = Solver_filtered_field(filename,Rs)
@@ -97,23 +97,29 @@ mdata = Model(vxbar , vybar, vzbar)
 SMG_xx, SMG_yy, SMG_zz, SMG_xy, SMG_xz, SMG_yz, SMG_div_x_div, SMG_div_y_div, SMG_div_z_div = mdata.SMG()
 
 #%%
-alpha = 0.705000
+alpha = 0.755000
 s_fL_x,s_fL_y,s_fL_z = mdata.Fractional_Laplacian(alpha)
 
+Lambda = 0.1
+s_tfL_x,s_tfL_y,s_tfL_z = mdata.Tempered_Fractional_Laplacian(alpha,Lambda)
 #
 sxxy = sx_div.reshape(redsz**3)
 SMG_xxy = SMG_div_x_div.reshape(redsz**3)
 FL_xxy = s_fL_x.reshape(redsz**3)
+TFL_xxy = s_tfL_x.reshape(redsz**3)
 print(np.corrcoef(sxxy, SMG_xxy))
 print(np.corrcoef(sxxy, FL_xxy))
+print(np.corrcoef(sxxy, TFL_xxy))
 
 corr_SMG = 0
 corr_FL = 0 
+corr_TFL = 0 
 for i in range(redsz):
     for j in range(redsz):
         corr_SMG += np.corrcoef(sx_div[i,j,:], SMG_div_x_div[i,j,:])
         corr_FL += np.corrcoef(sx_div[i,j,:], s_fL_x[i,j,:])
+        corr_TFL += np.corrcoef(sx_div[i,j,:], s_tfL_x[i,j,:])
 
 corr_SMG = corr_SMG/(redsz)**2
 corr_FL = corr_FL/(redsz)**2
-
+corr_TFL = corr_TFL/(redsz)**2
