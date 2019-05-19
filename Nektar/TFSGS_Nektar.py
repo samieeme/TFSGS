@@ -285,9 +285,10 @@ class Model (object):
         mu = (0.1 - 10)/0.9 *(alpha - 2.0) * \
         (2**(alpha)*gamma((alpha+3.)/2.))/np.pi**(3.0/2.0) \
         *np.abs(gamma(-alpha/2.))*gamma(alpha+1)*tau**(alpha-1)
-        s_fL_x = -mu/8. * Fractional_Laplacian_2(vx2hat,self.Nnod,alpha)
-        s_fL_y = -mu/8. * Fractional_Laplacian_2(vy2hat,self.Nnod,alpha)
-        s_fL_z = -mu/8. * Fractional_Laplacian_2(vz2hat,self.Nnod,alpha)
+        Node = len(vx2)
+        s_fL_x = -mu/8. * Fractional_Laplacian_2(vx2hat,Node,alpha)
+        s_fL_y = -mu/8. * Fractional_Laplacian_2(vy2hat,Node,alpha)
+        s_fL_z = -mu/8. * Fractional_Laplacian_2(vz2hat,Node,alpha)
         return s_fL_x,s_fL_y,s_fL_z
 
 
@@ -296,9 +297,9 @@ class Model (object):
 class Solver(object):
     
     def __init__(self,filename,R):
-        data_u = np.loadtxt(filename+'Res_12_u.dat')
-        data_v = np.loadtxt(filename+'Res_12_v.dat')
-        data_w = np.loadtxt(filename+'Res_12_w.dat')
+        data_u = np.loadtxt(filename+'H_Res_30_u.dat')
+        data_v = np.loadtxt(filename+'H_Res_30_v.dat')
+        data_w = np.loadtxt(filename+'H_Res_30_w.dat')
         prsz = data_u.shape[0]
         matsz = int(np.ceil(prsz ** (1./3.)))
         self.mainsz = matsz-1
@@ -440,17 +441,19 @@ class Solver(object):
 #%%
 #filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/April-15-2019/data_DNS/DrJaberi/DNS3Duvw.dat"
 filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/Nektar/"
-R = 4
+R = 2
 
 solver = Solver(filename,R)
 vxbar , vybar, vzbar, sxx, sxy, sxz, syy, syz, szz, redsz ,rrr = solver.get_bar_box()
 sx_div = div(sxx,sxy,sxz, redsz)
 sy_div = div(sxy,syy,syz, redsz)
 sz_div = div(sxz,syz,szz, redsz)
-#sxx_bar2, sxy_bar2, sxz_bar2, syy_bar2, syz_bar2, szz_bar2, vxbar2 , vybar2, vzbar2 = solver.Strsses_bar (1)
-#sx_div_bar2 = div(sxx_bar2,sxy_bar2,sxz_bar2, redsz)
-#sy_div_bar2 = div(sxy_bar2,syy_bar2,syz_bar2, redsz)
-#sz_div_bar2 = div(sxz_bar2,syz_bar2,szz_bar2, redsz)
+#%%
+sxx_bar2, sxy_bar2, sxz_bar2, syy_bar2, syz_bar2, szz_bar2, vxbar2 , vybar2, vzbar2 = solver.Strsses_bar (1)
+redsz2 = len(sxx_bar2)
+sx_div_bar2 = div(sxx_bar2,sxy_bar2,sxz_bar2, redsz2)
+sy_div_bar2 = div(sxy_bar2,syy_bar2,syz_bar2, redsz2)
+sz_div_bar2 = div(sxz_bar2,syz_bar2,szz_bar2, redsz2)
 
 
 solver.plot(R)
@@ -460,20 +463,21 @@ mdata = Model(vxbar , vybar, vzbar)
 
 SMG_xx, SMG_yy, SMG_zz, SMG_xy, SMG_xz, SMG_yz, SMG_div_x_div, SMG_div_y_div, SMG_div_z_div = mdata.SMG()
 
-#SIM_xx, SIM_yy, SMG_zz, SIM_xy, SIM_xz, SIM_yz, SIM_div_x_div, SIM_div_y_div, SIM_div_z_div = mdata.SIM(vxbar,vybar,vzbar,1)
+SIM_xx, SIM_yy, SMG_zz, SIM_xy, SIM_xz, SIM_yz, SIM_div_x_div, SIM_div_y_div, SIM_div_z_div = mdata.SIM(vxbar,vybar,vzbar,1)
 
 
 
 
 #%%
-alpha = 0.950
+alpha = 0.9900
 s_fL_x,s_fL_y,s_fL_z = mdata.Fractional_Laplacian(alpha)
 
+#%%
 #alpha = 0.91005000
-#s_fL_xbar,s_fL_ybar,s_fL_zbar = mdata.Fractional_Laplacian_bar(vxbar2 , vybar2, vzbar2,alpha)
-#sx_div_bar = mdata.box_filter_sim(sx_div,1)
+s_fL_xbar,s_fL_ybar,s_fL_zbar = mdata.Fractional_Laplacian_bar(vxbar2 , vybar2, vzbar2,alpha)
+sx_div_bar = mdata.box_filter_sim(sx_div,1)
 
-
+#%%
 
 Lambda = 100
 s_tfL_x, s_tfL_y, s_tfL_z = mdata.Tempered_Fractional_Laplacian(alpha,Lambda)
@@ -495,13 +499,17 @@ for i in range(len_alpha):
 
 sxxy = sxy.reshape(redsz**3)
 Sx_div =sx_div.reshape(redsz**3)
-#SIM_xxy = SIM_xy.reshape(redsz**3)
+SIM_xxy = SIM_xy.reshape(redsz**3)
 SMG_xxy = SMG_xy.reshape(redsz**3)
 FL_xxy = s_fL_x.reshape(redsz**3)
-
-print(np.corrcoef(sxxy, SMG_xxy))
-#print(np.corrcoef(sxxy, SIM_xxy))
-print(np.corrcoef(Sx_div, FL_xxy))
+TFL_xxy = s_tfL_x.reshape(redsz**3)
+SMG_xxy2 = SMG_div_x_div.reshape(redsz**3)
+#%%
+#print(np.corrcoef(sxxy, SMG_xxy))
+##print(np.corrcoef(sxxy, SIM_xxy))
+#print(np.corrcoef(Sx_div, SMG_xxy2))
+#print(np.corrcoef(Sx_div, FL_xxy))
+#print(np.corrcoef(Sx_div, TFL_xxy))
 
 corr_SMG = 0
 corr_FL = 0 
@@ -513,16 +521,18 @@ corr_FL_bar = 0
 for i in range(redsz):
     for j in range(redsz):
         corr_SMG += np.corrcoef(sx_div[i,j,:], SMG_div_x_div[i,j,:])
-     #   corr_SIM += np.corrcoef(sx_div[i,j,:], SIM_div_x_div[i,j,:])
+        corr_SIM += np.corrcoef(sx_div[i,j,:], SIM_div_x_div[i,j,:])
         corr_FL += np.corrcoef(sx_div[i,j,:], s_fL_x[i,j,:])
         corr_TFL += np.corrcoef(sx_div[i,j,:], s_tfL_x[i,j,:])
         corr_DFL += np.corrcoef(sx_div[i,j,:], s_dfL_x[i,j,:])
-    #    corr_FL_bar += np.corrcoef(sx_div_bar2[i,j,:], s_fL_xbar[i,j,:])
+for i in range(len(sx_div_bar2)):
+    for j in range(len(sx_div_bar2)):
+        corr_FL_bar += np.corrcoef(sx_div_bar2[i,j,:], s_fL_xbar[i,j,:])
         
 corr_SMG = corr_SMG/(redsz)**2
 corr_FL = corr_FL/(redsz)**2
-#corr_SIM = corr_SIM/(redsz)**2
+corr_SIM = corr_SIM/(redsz)**2
 corr_TFL = corr_TFL/(redsz)**2
 corr_DFL = corr_DFL/(redsz)**2
-#corr_FL_bar = corr_FL_bar/(redsz)**2
+corr_FL_bar = corr_FL_bar/(len(sx_div_bar2))**2
 
