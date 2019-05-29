@@ -7,7 +7,7 @@ Created on Mon May  6 18:39:09 2019
 import numpy as np
 from math import pi, gamma
 from astropy.convolution import convolve
-from functions import remain, deriv_x, deriv_y, deriv_z, div, \
+from functions_2 import remain, deriv_x, deriv_y, deriv_z, div, \
     Fractional_Laplacian_2, Reduce_period, Tempered_Fractional_Laplacian_2
     
 class Model (object):

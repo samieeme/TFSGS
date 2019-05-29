@@ -9,9 +9,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import pi, gamma
 from astropy.convolution import convolve
-from functions import remain, deriv_x, deriv_y, deriv_z, div, \
+from functions_2 import remain, deriv_x, deriv_y, deriv_z, div, \
     Fractional_Laplacian_2, Reduce_period
-from Models import Model
+from Models_2 import Model
 
 
 class Solver_filtered_field(object):
@@ -78,7 +78,7 @@ class Solver_filtered_field(object):
         plt.colorbar()
         plt.show()
 #%%
-Rs = str(32)
+Rs = str(128)
 
 filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/t-1000/DNS_"+ Rs
 
@@ -116,8 +116,8 @@ corr_FL = 0
 corr_TFL = 0 
 for i in range(redsz):
     for j in range(redsz):
-        corr_SMG += np.corrcoef(sx_div[i,j,:], SMG_div_x_div[i,j,:])
-        corr_FL += np.corrcoef(sx_div[i,j,:], s_fL_x[i,j,:])
+        corr_SMG += np.corrcoef(sy_div[i,j,:], SMG_div_y_div[i,j,:])
+        corr_FL += np.corrcoef(sy_div[i,j,:], s_fL_y[i,j,:])
         corr_TFL += np.corrcoef(sx_div[i,j,:], s_tfL_x[i,j,:])
 
 corr_SMG = corr_SMG/(redsz)**2
