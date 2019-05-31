@@ -49,7 +49,8 @@ class Output_Corr (object):
     def FSGS_Model(self,alpha_fl,nu):
         mdata = FSGS_Model(self.vxbar , self.vybar, self.vzbar)
         s_fL_x ,s_fL_y ,s_fL_z = mdata.Fractional_Laplacian(alpha_fl,nu)
-        fl_sxx, fl_syy, fl_szz, fl_sxy, fl_sxz, fl_syz = mdata.FSGS_stress (alpha_fl, nu)
+        if alpha_fl> 0.5 :
+            fl_sxx, fl_syy, fl_szz, fl_sxy, fl_sxz, fl_syz = mdata.FSGS_stress (alpha_fl, nu)
         
         V_fl_sx = s_fL_x.reshape(self.redsz**3)
         V_fl_sy = s_fL_y.reshape(self.redsz**3)
@@ -65,12 +66,13 @@ class Output_Corr (object):
         corr_fsgs[0] = self.corr_3d(s_fL_x,self.sx_div)
         corr_fsgs[1] = self.corr_3d(s_fL_y,self.sy_div)
         corr_fsgs[2] = self.corr_3d(s_fL_z,self.sz_div)
-        corr_fsgs[3] = self.corr_3d(fl_sxx,self.sxx)         
-        corr_fsgs[4] = self.corr_3d(fl_sxy,self.sxy) 
-        corr_fsgs[5] = self.corr_3d(fl_sxz,self.sxz) 
-        corr_fsgs[6] = self.corr_3d(fl_syz,self.syz) 
-        corr_fsgs[7] = self.corr_3d(fl_syy,self.syy) 
-        corr_fsgs[8] = self.corr_3d(fl_szz,self.szz)  
+        if alpha_fl> 0.5 :
+            corr_fsgs[3] = self.corr_3d(fl_sxx,self.sxx)         
+            corr_fsgs[4] = self.corr_3d(fl_sxy,self.sxy) 
+            corr_fsgs[5] = self.corr_3d(fl_sxz,self.sxz) 
+            corr_fsgs[6] = self.corr_3d(fl_syz,self.syz) 
+            corr_fsgs[7] = self.corr_3d(fl_syy,self.syy) 
+            corr_fsgs[8] = self.corr_3d(fl_szz,self.szz)  
 
         slope, intercept, r_value, p_value, std_err = stats.linregress(V_fl_sx,V_dns_sx)
         corr_fsgs[9] = slope
