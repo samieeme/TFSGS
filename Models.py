@@ -45,7 +45,7 @@ class Solver_filtered_field_JHU(object):
         self.sxx = Reduce_period_JHU(sxxm,matsz) - self.vxbar * self.vxbar
         self.sxy = Reduce_period_JHU(sxym,matsz) - self.vxbar * self.vybar
         self.sxz = Reduce_period_JHU(sxzm,matsz) - self.vxbar * self.vzbar
-        self.syy = Reduce_period_JHU(syym,matsz) - self.vybar * self.vzbar
+        self.syy = Reduce_period_JHU(syym,matsz) - self.vybar * self.vybar
         self.syz = Reduce_period_JHU(syzm,matsz) - self.vybar * self.vzbar
         self.szz = Reduce_period_JHU(szzm,matsz) - self.vzbar * self.vzbar
         
@@ -54,9 +54,9 @@ class Solver_filtered_field_JHU(object):
 
 class Solver_filtered_field(object):
     
-    def __init__(self,filename,Rs):
-        name_V = "/vel-t30-R"+Rs+".csv"
-        name_sgs = "/sgs-t30-R"+Rs+".csv"
+    def __init__(self,filename,Rs,time):
+        name_V = "/vel-t"+time+"-R"+Rs+".csv"
+        name_sgs = "/sgs-t"+time+"-R"+Rs+".csv"
         V = np.genfromtxt(filename+name_V,delimiter=",")
         SGSm = np.genfromtxt(filename+name_sgs,delimiter=",")
         prsz = V.shape[0]

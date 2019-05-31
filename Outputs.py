@@ -12,8 +12,8 @@ from scipy import stats
 class Output_Corr (object):
     
     def __init__(self,filename,Rs):
-        solver = Solver_filtered_field(filename,Rs)
- #       solver = Solver_filtered_field_JHU(filename,Rs)
+ #       solver = Solver_filtered_field(filename,Rs,time)
+        solver = Solver_filtered_field_JHU(filename,Rs)
         self.vxbar , self.vybar, self.vzbar, self.sxx, self.sxy, self.sxz, \
         self.syy, self.syz, self.szz, self.redsz = solver.Output()
         self.sx_div = div(self.sxx,self.sxy,self.sxz, self.redsz)
@@ -78,8 +78,8 @@ class Output_Corr (object):
         corr_fsgs[10] = slope
         slope, intercept, r_value, p_value, std_err = stats.linregress(V_fl_sz,V_dns_sz)
         corr_fsgs[11] = slope
-        
-        return corr_fsgs
+        test = np.corrcoef(V_fl_sy, V_dns_sy)
+        return corr_fsgs, test
 
     def TFSGS_Model(self,alpha_tem,Lambda):  
         mdata = Tempered_FSGS(self.vxbar , self.vybar, self.vzbar)        
