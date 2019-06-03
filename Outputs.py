@@ -74,11 +74,11 @@ class Output_Corr (object):
             corr_fsgs[7] = self.corr_3d(fl_syy,self.syy) 
             corr_fsgs[8] = self.corr_3d(fl_szz,self.szz)  
 
-        slope, intercept, r_value, p_value, std_err = stats.linregress(V_fl_sx,V_dns_sx)
+        slope, intercept, r_value, p_value, std_err = stats.linregress(V_dns_sx,V_fl_sx)
         corr_fsgs[9] = slope
-        slope, intercept, r_value, p_value, std_err = stats.linregress(V_fl_sy,V_dns_sy)
+        slope, intercept, r_value, p_value, std_err = stats.linregress(V_dns_sy,V_fl_sy)
         corr_fsgs[10] = slope
-        slope, intercept, r_value, p_value, std_err = stats.linregress(V_fl_sz,V_dns_sz)
+        slope, intercept, r_value, p_value, std_err = stats.linregress(V_dns_sz,V_fl_sz)
         corr_fsgs[11] = slope
         test = np.corrcoef(V_fl_sy, V_dns_sy)
         return corr_fsgs, test
