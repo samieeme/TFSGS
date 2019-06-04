@@ -183,14 +183,14 @@ class FSGS_Model (Pre_Models):
     def Fractional_Laplacian(self,alpha,nu):
         tau = (6*nu+1)/2
        #-(alpha - 1.0) * \
-        mu = 8000* (alpha ) * (2.0**(2.0*alpha)*gamma((2.0*alpha+3.)/2.))/np.pi**(3.0/2.0) \
-        /np.abs(gamma(-alpha))*gamma(2*alpha+1)*tau**(alpha-1) * nu**(alpha)
+        mu =1200*alpha**2  * (2.0**(2.0*alpha)*gamma((2.0*alpha+3.)/2.))/np.pi**(3.0/2.0) \
+        /np.abs(gamma(-alpha))*gamma(2*alpha+1)*tau**(alpha-1)  * nu**(alpha)
         vx = self.vxhat[:]
         vy = self.vyhat[:]
         vz = self.vzhat[:]
-        s_fL_x = -mu/10 * self.Fractional_Laplacian_2(vx,alpha)
-        s_fL_y = -mu/10 * self.Fractional_Laplacian_2(vy,alpha)
-        s_fL_z = -mu/10 * self.Fractional_Laplacian_2(vz,alpha)
+        s_fL_x = -mu* self.Fractional_Laplacian_2(vx,alpha)
+        s_fL_y = -mu* self.Fractional_Laplacian_2(vy,alpha)
+        s_fL_z = -mu* self.Fractional_Laplacian_2(vz,alpha)
         return s_fL_x,s_fL_y,s_fL_z
     
     def FSGS_stress (self, alpha, nu):
