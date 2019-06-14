@@ -7,17 +7,20 @@ Created on Wed Apr 17 13:28:48 2019
 import numpy as np
 from functions import remain, deriv_x, deriv_y, deriv_z, div, Reduce_period
 from Outputs import Output_Corr
+#import os
+import sys
 
 #del( time, Rs, filename, fileout, corr_smg, corr_fsgs)
 
-time = str(20) #input("Time:  ")
-Rs = input("filter width:  ")
-
+time = str(1000) #input("Time:  ")
+#Rs = input("filter width:  ")
+Rs = sys.argv[1]
+time_step = str(sys.argv[2])
 
 #filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/Nektar/20"
-filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/t-1000/DNS_"+ Rs
+filename="/mnt/home/samieeme/FSGS_paper/t-"+time_step+"/DNS_"+ Rs
 #filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/Nektar/20/"
-fileout = 'C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/Nektar/20/'
+fileout = "/mnt/home/samieeme/FSGS_paper/t-"+time_step+"/DNS_"+ Rs +"/"
 
 
 
@@ -29,8 +32,8 @@ np.savetxt(fileout+'output-time-'+time+'-R'+Rs+'-SMG.csv', corr_smg)
 
 nu = 0.000181#1.0/1600
 alpha1 = np.linspace(0,1,21) #[0.01,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.99]
-alpha1[0] = 0.01
-alpha1[21] = 0.99
+alpha1[0] = 0.05
+alpha1[20] = 0.9999
 #alpha1 = [0.9]
 for i in alpha1:
     corr_fsgs,test = solver.FSGS_Model(i,nu)

@@ -183,7 +183,7 @@ class FSGS_Model (Pre_Models):
     def Fractional_Laplacian(self,alpha,nu):
         tau = (6*nu+1)/2
        #-(alpha - 1.0) * \
-        mu =1200*alpha**2  * (2.0**(2.0*alpha)*gamma((2.0*alpha+3.)/2.))/np.pi**(3.0/2.0) \
+        mu =1500*alpha**2  * (2.0**(2.0*alpha)*gamma((2.0*alpha+3.)/2.))/np.pi**(3.0/2.0) \
         /np.abs(gamma(-alpha))*gamma(2*alpha+1)*tau**(alpha-1)  * nu**(alpha)
         vx = self.vxhat[:]
         vy = self.vyhat[:]
