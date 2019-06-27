@@ -55,21 +55,41 @@ class Solver_filtered_field_JHU(object):
 class Solver_filtered_field(object):
     
     def __init__(self,filename,Rs,time):
-        name_V = "/vel-t"+time+"-R"+Rs+".csv"
-        name_sgs = "/sgs-t"+time+"-R"+Rs+".csv"
-        V = np.genfromtxt(filename+name_V,delimiter=",")
-        SGSm = np.genfromtxt(filename+name_sgs,delimiter=",")
-        prsz = V.shape[0]
+        name_Vx="/velx-t"+time+"-R"+Rs+".csv"
+        name_Vy="/vely-t"+time+"-R"+Rs+".csv"
+        name_Vz="/velz-t"+time+"-R"+Rs+".csv"
+        
+        name_sgsxx = "/Sxx-t"+time+"-R"+Rs+".csv"
+        name_sgsxy = "/Sxy-t"+time+"-R"+Rs+".csv"
+        name_sgsxz = "/Sxz-t"+time+"-R"+Rs+".csv"
+        name_sgsyy = "/Syy-t"+time+"-R"+Rs+".csv"
+        name_sgsyz = "/Syz-t"+time+"-R"+Rs+".csv"
+        name_sgszz = "/Szz-t"+time+"-R"+Rs+".csv"
+        
+        Vx = np.genfromtxt(filename+name_Vx)
+        Vy = np.genfromtxt(filename+name_Vy)
+        Vz = np.genfromtxt(filename+name_Vz)
+        
+        SGSxx = np.genfromtxt(filename+name_sgsxx)
+        SGSxy = np.genfromtxt(filename+name_sgsxy)
+        SGSxz = np.genfromtxt(filename+name_sgsxz)
+        SGSyy = np.genfromtxt(filename+name_sgsyy)
+        SGSyz = np.genfromtxt(filename+name_sgsyz)
+        SGSzz = np.genfromtxt(filename+name_sgszz)
+        
+        prsz = Vx.shape[0]
         self.matsz = int(np.ceil(prsz ** (1./3.)))
-        self.vx = V[:,0]
-        self.vy = V[:,1]
-        self.vz = V[:,2]
-        self.sxxm = SGSm[:,0]
-        self.sxym = SGSm[:,1]
-        self.sxzm = SGSm[:,2]
-        self.syym = SGSm[:,3]
-        self.syzm = SGSm[:,4]
-        self.szzm = SGSm[:,5]
+        self.vx = Vx[:]
+        self.vy = Vy[:]
+        self.vz = Vz[:]
+        self.sxxm = SGSxx[:]
+        self.sxym = SGSxy[:]
+        self.sxzm = SGSxz[:]
+        self.syym = SGSyy[:]
+        self.syzm = SGSyz[:]
+        self.szzm = SGSzz[:]        
+
+
 
     def Output(self):      
         self.vxbar = Reduce_period(self.vx,self.matsz)
@@ -220,7 +240,7 @@ class SMG_Model (Pre_Models):
     
     def SMG(self):
         sxx, syy, szz, sxy, sxz, syz = self.strain()
-        S = np.sqrt(sxx**2+syy**2+szz**2+sxy**2+sxz**2+syz**2)
+        S = np.sqrt(sxx**2+syy**2+szz**2+2*sxy**2+2*sxz**2+2*syz**2)
         SMG_xx = -S * sxx * 0.02
         SMG_yy = -S * syy * 0.02
         SMG_zz = -S * szz * 0.02

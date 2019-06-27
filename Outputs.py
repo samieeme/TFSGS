@@ -11,9 +11,9 @@ from scipy import stats
    
 class Output_Corr (object):
     
-    def __init__(self,filename,Rs):
- #       solver = Solver_filtered_field(filename,Rs,time)
-        solver = Solver_filtered_field_JHU(filename,Rs)
+    def __init__(self,filename,Rs,time):
+        solver = Solver_filtered_field(filename,Rs,time)
+#        solver = Solver_filtered_field_JHU(filename,Rs)
         self.vxbar , self.vybar, self.vzbar, self.sxx, self.sxy, self.sxz, \
         self.syy, self.syz, self.szz, self.redsz = solver.Output()
         self.sx_div = div(self.sxx,self.sxy,self.sxz, self.redsz)
