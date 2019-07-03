@@ -105,6 +105,9 @@ tau_eta=np.sqrt(nu/epsilon)
 #Kolmogorov length scale
 eta=(nu**3/epsilon)**0.25
 
+#clear the memory
+del S11, S12, S13, S22, S23, S33
+del du1dx, du2dx, du3dx, du1dy, du2dy, du3dy, du1dz, du2dz, du3dz
 
 out=np.array([E_tot, U_rms, epsilon, lamb, Re_T, tau_eta, eta])
 np.savetxt('Stats_'+time+'.dat', out, delimiter=',')
