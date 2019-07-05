@@ -122,8 +122,8 @@ u2hat = np.fft.fftn(u2)
 u3hat = np.fft.fftn(u3)
 
 Esp=np.zeros((sz,2))
-wave_n=np.array([0,0,0])
-max_wave=tst=int(res/2)
+wave_n=np.array([0.0,0.0,0.0])
+max_wave=int(res/2)
 
 tmp_U=np.zeros((1,3), dtype=complex)
 ndx=0
@@ -138,15 +138,18 @@ for k in range(0,res):
 
             U_mag=LA.norm(tmp_U, ord=2)
             Esp[ndx,0]=0.5*U_mag**2
-
+            
+            wave_n[0]=i
             if i > max_wave:
-                wave_n[0,0]=i-res
+                wave_n[0]=i-res
+            wave_n[1]=j
             if j > max_wave:
-                wave_n[0,1]=j-res
+                wave_n[1]=j-res
+            wave_n[2]=k
             if k > max_wave:
-                wave_n[0,2]=k-res
+                wave_n[2]=k-res
 
-            Esp[ndx,1]=LA.norm(wave_n, ord=2)
-            ndx=ndx+1
+            Esp[ndx,1]=np.round(LA.norm(wave_n, ord=2))
+            ndx +=1
 
 Esp_sort = Esp[Esp[:,1].argsort()]
