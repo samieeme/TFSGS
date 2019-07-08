@@ -30,6 +30,10 @@ u1=u1[0:res,0:res,0:res]
 u2=u2[0:res,0:res,0:res]
 u3=u3[0:res,0:res,0:res]
 
+u1=u1-np.mean(u1)
+u2=u2-np.mean(u2)
+u3=u3-np.mean(u3)
+
 PI=np.pi
 
 Delta=2.0*PI/res
@@ -112,9 +116,6 @@ eta=(nu**3/epsilon)**0.25
 del S11, S12, S13, S22, S23, S33
 del du1dx, du2dx, du3dx, du1dy, du2dy, du3dy, du1dz, du2dz, du3dz
 
-out=np.array([E_tot, U_rms, epsilon, lamb, Re_T, tau_eta, eta])
-np.savetxt('Stats_'+time+'.dat', out, delimiter=',')
-
 ###############################################################
 ###############################################################
 
@@ -173,16 +174,20 @@ for j in range(0,Energy_Spct.size):
     else:
         vol=((i+0.5)**3-(i-0.5)**3)*PI*4.0/3.0
         
-    Energy_Spct[j] *= vol
+    Energy_Spct[j] *= (vol/res**3)
     
-    Intg_scale +=Energy_Spct[j]/i
+    Intg_scale +=Energy_Spct[j]/i 
     
 
-#Integral scale    
+#Integral length scale    
 Intg_scale /= np.sum(Energy_Spct)
 
 #Large eddy turnover time
 T_L = Intg_scale/U_rms
     
-    
-    
+#Output statistical characteristics    
+out=np.array([E_tot, U_rms, epsilon, lamb, Re_T, tau_eta, eta, Intg_scale, T_L])
+np.savetxt('Stats_'+time+'.dat', out, delimiter=',')
+
+#Output the modal energy
+np.savetxt('MEng_'+time+'.dat', Energy_Spct, delimiter=',')
