@@ -30,7 +30,9 @@ u1=u1[0:res,0:res,0:res]
 u2=u2[0:res,0:res,0:res]
 u3=u3[0:res,0:res,0:res]
 
-Delta=2.0*np.pi/res
+PI=np.pi
+
+Delta=2.0*PI/res
 
 #viscosity
 nu=0.001
@@ -153,3 +155,34 @@ for k in range(0,res):
             ndx +=1
 
 Esp_sort = Esp[Esp[:,1].argsort()]
+
+del Esp
+
+Esp_sort[:,1][Esp_sort[:,1]==0.0]=1.0
+Energy_Spct = np.zeros(int(Esp_sort[-1,1]))
+Intg_scale = 0.0
+
+for j in range(0,Energy_Spct.size):
+    i=j+1
+    tmp1=np.nonzero(Esp_sort[:,1]==i)
+    tmp2=tmp1[0]
+    Energy_Spct[j]=np.mean(Esp_sort[tmp2[0]:tmp2[-1]+1,0])
+    
+    if i == 1:
+        vol=(1.5**3)*PI*4.0/3.0
+    else:
+        vol=((i+0.5)**3-(i-0.5)**3)*PI*4.0/3.0
+        
+    Energy_Spct[j] *= vol
+    
+    Intg_scale +=Energy_Spct[j]/i
+    
+
+#Integral scale    
+Intg_scale /= np.sum(Energy_Spct)
+
+#Large eddy turnover time
+T_L = Intg_scale/U_rms
+    
+    
+    
