@@ -9,9 +9,14 @@ from functions import remain, deriv_x, deriv_y, deriv_z, div, Reduce_period
 from Outputs import Output_Corr
 #import os
 import sys
+from IPython import get_ipython
 
+
+get_ipython().magic('reset -sf')
 #del( time, Rs, filename, fileout, corr_smg, corr_fsgs)
 
+
+#%%
 #time = str(100) #input("Time:  ")
 #Rs = input("filter width:  ")
 #Rs = sys.argv[1]
@@ -22,10 +27,10 @@ for jj in range(1,16):
 	Rs = str(jj)
 	#filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/Nektar/20"
 	#filename="/mnt/home/samieeme/FSGS_paper/t-"+time_step+"/DNS_"+ Rs
-	#filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/Nektar/20/"
-	#fileout = "/mnt/home/samieeme/FSGS_paper/t-"+time_step+"/DNS_"+ Rs +"/"
-	filename="/mnt/home/samieeme//FSGS_paper/Decaying/Filtered/"+time_step
-	fileout ="/mnt/home/samieeme/FSGS_paper/Decaying/Outputs/"+time_step+"/L_"+ Rs +"/"
+	filename="C:/Users/samieeme.CMSE020/Desktop/New folder/semesters/PHD MSU/Semester 9/research/DNS-data/Nektar/20/"
+# 	fileout = "/mnt/home/samieeme/FSGS_paper/t-"+time_step+"/DNS_"+ Rs +"/"
+# 	filename="/mnt/home/samieeme//FSGS_paper/Decaying/Filtered/"+time_step
+# 	fileout ="/mnt/home/samieeme/FSGS_paper/Decaying/Outputs/"+time_step+"/L_"+ Rs +"/"
 
 	solver = Output_Corr(filename,Rs,time_step)
 

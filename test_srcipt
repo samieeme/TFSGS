@@ -1,0 +1,9 @@
+#! /bin/bash
+FILE_NAME=$(ls *.mat)
+##echo "$FILE_NAME"
+ADD_OUT="tmprr_fltrd_DNS"
+HOME=$(pwd)
+echo $HOME
+NEW_HOME=${HOME}/${ADD_OUT}
+echo $NEW_HOME
+python main.py $FILE_NAME $NEW_HOME
