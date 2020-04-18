@@ -1,0 +1,20 @@
+#! /bin/bash
+cd ../Data
+FILE_NAME=$(ls *.mat)
+echo "$FILE_NAME"
+ADD_OUT="tmprr_fltrd_DNS"
+mkdir tmprr_fltrd_DNS
+rm -rf tmprr_fltrd_DNS/*
+ROOT=$(pwd)
+HOME=${ROOT}/${ADD_OUT}
+echo $(pwd)
+#echo $NEW_HOME
+cd ../Platform/Filtering
+python main.py $ROOT $FILE_NAME $HOME
+cd ${HOME}
+FILE_NAME=$(ls *.csv)
+echo ${FILE_NAME}
+echo "Filter Done!"
+#echo $HOME
+cd ../../Platform/LES_I
+python TFSGS.py 2 $HOME $FILE_NAME
