@@ -6,8 +6,9 @@ Created on Wed Jun 19 16:08:16 2019
 """
 import numpy as np
 from math import pi, gamma
-from astropy.convolution import convolve
+#from astropy.convolution import convolve
 from functions_filtering import remain, deriv_x, deriv_y, deriv_z, div, Reduce_period, Find_Neighboar
+from MT_Filtering import Single_Filter, Multi_Filter
 
 class Solver(object):
     
@@ -47,8 +48,8 @@ class Solver(object):
     #     self.rad = R
     #     self.rrr = div(self.vxm,self.vym,self.vzm,self.mainsz)
         
-    def __init__(self,file_out, U,V,W,R):
-        
+    def __init__(self,file_out, U,V,W,R,num_threads):
+        self.thrd_num = num_threads
         matsz = 320
         self.mainsz = matsz - remain(matsz,2*R) 
         
@@ -83,7 +84,10 @@ class Solver(object):
         vxbar = np.zeros((self.mainsz,self.mainsz,self.mainsz))
         kernel = np.ones((2*R+1,2*R+1,2*R+1))
         
-        vxbar = convolve(VV , kernel, boundary='wrap') #signal.convolve(vx3 , kernel, mode='same', boundary='wrap')/(2*R+1)**3
+        if (self.thrd_num == 1):
+            vxbar = Single_Filter(VV , kernel) #convolve(VV , kernel, boundary='wrap') #
+        elif (self.thrd_num > 1):
+            vxbar = Multi_Filter(VV, kernel, self.mainsz, R, int(self.thrd_num/2))
         vx1 = vxbar[range(0,self.mainsz,2*R),:,:]
         vx2 = vx1[:,range(0,self.mainsz,2*R),:]
         vx3 = np.transpose(vx2[:,:,range(0,self.mainsz,2*R)])

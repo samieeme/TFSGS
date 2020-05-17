@@ -14,6 +14,7 @@ import sys
 from scipy.io import loadmat
 from functions_filtering import remain, deriv_x, deriv_y, deriv_z, div, Reduce_period, Find_Neighboar
 from Solve_Module import Solver
+import time
 
 def data_reshape(add_in,Np):
     v = loadmat(add_in)
@@ -57,12 +58,16 @@ fileR_out=add_in[Nprocc]+"/"
 
 # filename_out = fileR_out
 
-for R in range(2,3):
+num_threads = 1
+for R in range(4,5):
     print(R)
-    solver = Solver(fileR_out,U,V,W,R)
+    solver = Solver(fileR_out,U,V,W,R,num_threads)
+    start = time.time()
     vxbar, vybar, vzbar, sxx, sxy, sxz, syy, syz, szz, redsz, rrr=solver.get_bar_box()
+    st_time = time.time()-start
     solver.get_outfile(fileR_out,1,R)
 
+print("Multi_threaded = "+str(st_time))
 
 
 
