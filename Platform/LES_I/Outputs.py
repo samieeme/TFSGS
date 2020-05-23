@@ -4,8 +4,8 @@ Created on Tue May 28 00:11:40 2019
 
 @author: samieeme
 """
-from Models import Pre_Models, Solver_filtered_field_sep, SMG_Model, FSGS_Model, Tempered_FSGS, Solver_filtered_field_JHU
-from functions import remain, deriv_x, deriv_y, deriv_z, div, get_TwoPointCorr
+from Models_1 import Pre_Models, Solver_filtered_field_sep, SMG_Model, FSGS_Model, Tempered_FSGS, Solver_filtered_field_JHU
+from functions_1 import remain, deriv_x, deriv_y, deriv_z, div, get_TwoPointCorr
 import numpy as np
 from scipy import stats
 from math import gamma
@@ -23,10 +23,11 @@ class Output_Corr (object):
         
     def corr_3d (self,a,b):
         corr_temporary = 0. 
-        for i in range(self.redsz):
-            for j in range(self.redsz):
-                corr_temporary += np.corrcoef(a[i,j,:], b[i,j,:])
-        corr_temporary /= (self.redsz)**2
+        # for i in range(self.redsz):
+        #     for j in range(self.redsz):
+        #         corr_temporary += np.corrcoef(a[i,j,:], b[i,j,:])
+        corr_temporary = np.corrcoef(a.reshape((1,self.redsz**3)), b.reshape((1,self.redsz**3)))
+        #corr_temporary /= (self.redsz)**2
         return corr_temporary[0,1]
 
     
@@ -50,8 +51,8 @@ class Output_Corr (object):
     def FSGS_Model(self,alpha_fl,nu):
         mdata = FSGS_Model(self.vxbar , self.vybar, self.vzbar)
         s_fL_x ,s_fL_y ,s_fL_z = mdata.Fractional_Laplacian(alpha_fl,nu)
-        if alpha_fl> 0.5 :
-            self.fl_sxx, fl_syy, fl_szz, self.fl_sxy, fl_sxz, fl_syz = mdata.FSGS_stress (alpha_fl, nu)
+        # if alpha_fl> 0.5 :
+        #     self.fl_sxx, fl_syy, fl_szz, self.fl_sxy, fl_sxz, fl_syz = mdata.FSGS_stress (alpha_fl, nu)
         
         V_fl_sx = s_fL_x.reshape(self.redsz**3)
         V_fl_sy = s_fL_y.reshape(self.redsz**3)
@@ -67,20 +68,20 @@ class Output_Corr (object):
         corr_fsgs[0] = self.corr_3d(s_fL_x,self.sx_div)
         corr_fsgs[1] = self.corr_3d(s_fL_y,self.sy_div)
         corr_fsgs[2] = self.corr_3d(s_fL_z,self.sz_div)
-        if alpha_fl> 0.5 :
-            corr_fsgs[3] = self.corr_3d(self.fl_sxx,self.sxx)         
-            corr_fsgs[4] = self.corr_3d(self.fl_sxy,self.sxy) 
-            corr_fsgs[5] = self.corr_3d(fl_sxz,self.sxz) 
-            corr_fsgs[6] = self.corr_3d(fl_syz,self.syz) 
-            corr_fsgs[7] = self.corr_3d(fl_syy,self.syy) 
-            corr_fsgs[8] = self.corr_3d(fl_szz,self.szz)  
+        # if alpha_fl> 0.5 :
+        #     corr_fsgs[3] = self.corr_3d(self.fl_sxx,self.sxx)         
+        #     corr_fsgs[4] = self.corr_3d(self.fl_sxy,self.sxy) 
+        #     corr_fsgs[5] = self.corr_3d(fl_sxz,self.sxz) 
+        #     corr_fsgs[6] = self.corr_3d(fl_syz,self.syz) 
+        #     corr_fsgs[7] = self.corr_3d(fl_syy,self.syy) 
+        #     corr_fsgs[8] = self.corr_3d(fl_szz,self.szz)  
 
-        slope, intercept, r_value, p_value, std_err = stats.linregress(V_dns_sx,V_fl_sx)
-        corr_fsgs[9] = slope
-        slope, intercept, r_value, p_value, std_err = stats.linregress(V_dns_sy,V_fl_sy)
-        corr_fsgs[10] = slope
-        slope, intercept, r_value, p_value, std_err = stats.linregress(V_dns_sz,V_fl_sz)
-        corr_fsgs[11] = slope
+        # slope, intercept, r_value, p_value, std_err = stats.linregress(V_dns_sx,V_fl_sx)
+        # corr_fsgs[9] = slope
+        # slope, intercept, r_value, p_value, std_err = stats.linregress(V_dns_sy,V_fl_sy)
+        # corr_fsgs[10] = slope
+        # slope, intercept, r_value, p_value, std_err = stats.linregress(V_dns_sz,V_fl_sz)
+        # corr_fsgs[11] = slope
         test = np.corrcoef(V_fl_sy, V_dns_sy)
         return corr_fsgs, test
 

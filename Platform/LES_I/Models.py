@@ -7,9 +7,14 @@ Created on Mon May  6 18:39:09 2019
 import numpy as np
 from math import pi, gamma
 from astropy.convolution import convolve
-from functions import remain, deriv_x, deriv_y, deriv_z, div, Reduce_period, Reduce_period_JHU
+from functions_1 import remain, deriv_x, deriv_y, deriv_z, div, Reduce_period, Reduce_period_JHU
 from scipy.fftpack import fftfreq
 import scipy.special as sc
+from mkl_fft import fftn, ifftn
+from mkl import set_num_threads, get_max_threads
+
+set_num_threads(4)
+
 #%%  Reading and preparing data
 
 class Solver_filtered_field_JHU(object):
@@ -166,9 +171,9 @@ class Pre_Models (object):
     def __init__(self,vxbar , vybar, vzbar):
         self.Nnod = len(vxbar)
         self.Nmode = (self.Nnod-1)/2 
-        self.vxhat = np.fft.fftn(vxbar)
-        self.vyhat = np.fft.fftn(vybar)
-        self.vzhat = np.fft.fftn(vzbar)
+        self.vxhat = fftn(vxbar)
+        self.vyhat = fftn(vybar)
+        self.vzhat = fftn(vzbar)
         self.kx = np.zeros((self.Nnod,self.Nnod,self.Nnod),dtype=complex)
         self.ky = np.zeros((self.Nnod,self.Nnod,self.Nnod),dtype=complex)
         self.kz = np.zeros((self.Nnod,self.Nnod,self.Nnod),dtype=complex)
@@ -181,25 +186,25 @@ class Pre_Models (object):
     def div(self,v1,v2,v3):
         divhat = np.zeros((self.Nnod,self.Nnod,self.Nnod),dtype = complex)
         divhat = self.kx * v1 + self.ky * v2 + self.kz * v3
-        diver_V = np.real(np.fft.ifftn(divhat))
+        diver_V = np.real(ifftn(divhat))
         return diver_V
 
     def deriv_x(self,Vhat):
         divhat = np.zeros((self.Nnod,self.Nnod,self.Nnod),dtype = complex)
         divhat = self.kx * Vhat
-        diverx_V = np.real(np.fft.ifftn(divhat))
+        diverx_V = np.real(ifftn(divhat))
         return diverx_V
     
     def deriv_y(self,Vhat):
         divhat = np.zeros((self.Nnod,self.Nnod,self.Nnod),dtype = complex)
         divhat = self.ky * Vhat
-        diverx_V = np.real(np.fft.ifftn(divhat))
+        diverx_V = np.real(ifftn(divhat))
         return diverx_V
     
     def deriv_z(self,Vhat):
         divhat = np.zeros((self.Nnod,self.Nnod,self.Nnod),dtype = complex)
         divhat = self.kz * Vhat
-        diverx_V = np.real(np.fft.ifftn(divhat))
+        diverx_V = np.real(ifftn(divhat))
         return diverx_V
     
 #    def box_filter(self,VV,R):
@@ -234,7 +239,7 @@ class FSGS_Model (Pre_Models):
 
         frac_L  = -(dis**2)**(alpha)     
         divhat = frac_L * Vhat
-        diverz_V = np.real(np.fft.ifftn(divhat))
+        diverz_V = np.real(ifftn(divhat))
         return diverz_V
     
     def Fractional_Laplacian(self,alpha,nu):
@@ -306,7 +311,7 @@ class Tempered_FSGS (Pre_Models):
                     dis[i,j,k] = np.sqrt(abs(freq[i])**2 + abs(freq[j])**2 + abs(freq[k])**2)
         frac_L = f_alpha*((Lambda**2 + dis**2)**(2*alpha/2)*sc.hyp2f1(-alpha,(3+2*alpha-1)/2,3/2,dis**2/(dis**2+Lambda**2))-Lambda**(2*alpha))
         divhat = frac_L * Vhat
-        diverz_V = np.real(np.fft.ifftn(divhat))
+        diverz_V = np.real(ifftn(divhat))
         return diverz_V
     
     def Tempered_Fractional_Laplacian(self,alpha,Lambda,nu):

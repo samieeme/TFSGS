@@ -5,6 +5,10 @@ Created on Mon May  6 16:24:28 2019
 @author: samieeme
 """
 import numpy as np
+from mkl_fft import fftn, ifftn
+from mkl import set_num_threads, get_max_threads
+
+set_num_threads(4)
 
 def remain (a,b,v):
     c = a%b
@@ -12,7 +16,7 @@ def remain (a,b,v):
     return c
 
 def deriv_x(Nnod,V):
-    Vhat = np.fft.fftn(V)
+    Vhat = fftn(V)
     divhat = np.zeros((Nnod,Nnod,Nnod),dtype = complex)
     kx = np.zeros((Nnod,Nnod,Nnod),dtype=complex)
     for i1 in range(Nnod):
@@ -22,11 +26,11 @@ def deriv_x(Nnod,V):
            kx[i1,:,:] = complex(0,i1-Nnod)   
     
     divhat = kx * Vhat
-    diverx_V = np.real(np.fft.ifftn(divhat))
+    diverx_V = np.real(ifftn(divhat))
     return diverx_V
 
 def deriv_y(Nnod,V):
-    Vhat = np.fft.fftn(V)
+    Vhat = fftn(V)
     divhat = np.zeros((Nnod,Nnod,Nnod),dtype = complex)
     ky = np.zeros((Nnod,Nnod,Nnod),dtype=complex)
     for i2 in range(Nnod):
@@ -36,11 +40,11 @@ def deriv_y(Nnod,V):
            ky[:,i2,:] = complex(0,i2-Nnod)  
     
     divhat = ky * Vhat
-    divery_V = np.real(np.fft.ifftn(divhat))
+    divery_V = np.real(ifftn(divhat))
     return divery_V
 
 def deriv_z(Nnod,V):
-    Vhat = np.fft.fftn(V)
+    Vhat = fftn(V)
     divhat = np.zeros((Nnod,Nnod,Nnod),dtype = complex)
     kz = np.zeros((Nnod,Nnod,Nnod),dtype=complex)
     for i3 in range(Nnod):
@@ -50,7 +54,7 @@ def deriv_z(Nnod,V):
            kz[:,:,i3] = complex(0,i3-Nnod)   
     
     divhat = kz * Vhat
-    diverz_V = np.real(np.fft.ifftn(divhat))
+    diverz_V = np.real(ifftn(divhat))
     return diverz_V
 
 def div(v1,v2,v3,Nnod):
