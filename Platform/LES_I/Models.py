@@ -7,7 +7,7 @@ Created on Mon May  6 18:39:09 2019
 import numpy as np
 from math import pi, gamma
 from astropy.convolution import convolve
-from functions_1 import remain, deriv_x, deriv_y, deriv_z, div, Reduce_period, Reduce_period_JHU
+from functions import remain, deriv_x, deriv_y, deriv_z, div, Reduce_period, Reduce_period_JHU
 from scipy.fftpack import fftfreq
 import scipy.special as sc
 from mkl_fft import fftn, ifftn

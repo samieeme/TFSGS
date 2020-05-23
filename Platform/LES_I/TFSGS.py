@@ -5,8 +5,8 @@ Created on Wed Apr 17 13:28:48 2019
 @author: samieeme
 """
 import numpy as np
-from functions_1 import remain, deriv_x, deriv_y, deriv_z, div, Reduce_period
-from Outputs_1 import Output_Corr
+from functions import remain, deriv_x, deriv_y, deriv_z, div, Reduce_period
+from Outputs import Output_Corr
 import matplotlib.pyplot as plt 
 import os
 import sys

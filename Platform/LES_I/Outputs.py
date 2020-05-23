@@ -4,8 +4,8 @@ Created on Tue May 28 00:11:40 2019
 
 @author: samieeme
 """
-from Models_1 import Pre_Models, Solver_filtered_field_sep, SMG_Model, FSGS_Model, Tempered_FSGS, Solver_filtered_field_JHU
-from functions_1 import remain, deriv_x, deriv_y, deriv_z, div, get_TwoPointCorr
+from Models import Pre_Models, Solver_filtered_field_sep, SMG_Model, FSGS_Model, Tempered_FSGS, Solver_filtered_field_JHU
+from functions import remain, deriv_x, deriv_y, deriv_z, div, get_TwoPointCorr
 import numpy as np
 from scipy import stats
 from math import gamma
