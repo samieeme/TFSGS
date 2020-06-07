@@ -58,7 +58,7 @@ fileR_out=add_in[Nprocc]+"/"
 
 # filename_out = fileR_out
 
-num_threads = 1
+num_threads = 4
 for R in range(4,5):
     print(R)
     solver = Solver(fileR_out,U,V,W,R,num_threads)

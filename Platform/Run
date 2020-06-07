@@ -1,20 +1,44 @@
 #! /bin/bash
-cd ../Data
-FILE_NAME=$(ls *.mat)
-echo "$FILE_NAME"
-ADD_OUT="tmprr_fltrd_DNS"
-mkdir tmprr_fltrd_DNS
-rm -rf tmprr_fltrd_DNS/*
-ROOT=$(pwd)
-HOME=${ROOT}/${ADD_OUT}
-echo $(pwd)
-#echo $NEW_HOME
-cd ../Platform/Filtering
-python main.py $ROOT $FILE_NAME $HOME
-cd ${HOME}
-FILE_NAME=$(ls *.csv)
-echo ${FILE_NAME}
-echo "Filter Done!"
-#echo $HOME
-cd ../../Platform/LES_I
-python TFSGS.py 2 $HOME $FILE_NAME
+cd $1 ## Data file
+REALIZATION=$(ls)
+for item in ${REALIZATION}
+do
+  cd ${item}
+  echo "items = ${item}"
+  DECAYRE=$(ls -d */)
+  for item2 in ${DECAYRE%%/}
+  do
+    cd $1/${item}/${item2}
+    HOMETMP=$(pwd)
+    FILE_NAME=$(ls *.mat)
+    ADD_OUT="flt_DNS"
+    cd $2
+    if [ -e ${item} ]
+    then
+      rm -rf $2/${item}/*
+    else
+      mkdir -p ${item}
+    fi
+    #echo ${FILE_NAME}
+    cd $2/${item}
+    OUT_FLT_DATA=$(pwd)
+    python /mnt/scratch/samieeme/TFSGS/Filtering/main.py $HOMETMP $FILE_NAME $OUT_FLT_DATA
+    FILE_NAME=$(ls *)
+    cd $3
+    if [ ! -e ${item} ]
+    then
+      mkdir $3/${item}
+    fi
+    cd $3/${item}
+    if [ ! -e ${item2} ]
+    then
+      mkdir $3/${item}/${item2}
+    fi
+    cd ./${item2}/
+    FILEOUT=$(pwd)
+    python TFSGS_1.py 4 $OUT_FLT_DATA $FILE_NAME $FILE_OUT
+  done
+  #echo ${HOMETMP}
+  #python /mnt/scratch/samieeme/TFSGS/Filtering/main.py $HOMETMP $FILE_NAME $OUT_FLT_DATA
+  cd $1
+done
