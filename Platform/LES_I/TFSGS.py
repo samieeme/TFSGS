@@ -16,6 +16,7 @@ Rs = sys.argv[1]
 add_in = sys.argv[2]
 filename = sys.argv[3:12]
 fileout = sys.argv[12]
+Rs = filename[0][8]
 print(add_in)
 print(filename)
 

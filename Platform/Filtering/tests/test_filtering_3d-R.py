@@ -27,16 +27,16 @@ def foo(q,im,c):
 
 
 N = 320
-R=2
+R=15
 N -= N%R
 # np.random.seed(100)
 image = np.random.randn(N,N,N)
 k = np.ones((2*R+1,2*R+1,2*R+1))
 
 start = time.time()   
-image_filtered = Filter(image, k)
+#image_filtered = Filter(image, k)
 print("Single threading: ",str(time.time()-start))
-num_threads = 4
+num_threads = 2
 image_extended_1 = np.concatenate((np.concatenate((np.reshape(image[N-R:,:,:],(R,N,N)),image[:,:,:]),axis=0)\
                                 ,np.reshape(image[0:R,:,:],(R,N,N))),axis=0)
 image_extended = np.concatenate((np.concatenate((image_extended_1[:,N-R:,:],image_extended_1[:,:,:]),axis=1),\
@@ -109,7 +109,8 @@ image_filtered_MT = np.concatenate((image_filtered_MT,im_all_filtered),axis=1)
     
 print("Multi threading: ",str(time.time()-start))
 
-error = np.max(np.abs(image_filtered_MT-image_filtered))
+#error = np.max(np.abs(image_filtered_MT-image_filtered))
+#print(error)
 
 
 
