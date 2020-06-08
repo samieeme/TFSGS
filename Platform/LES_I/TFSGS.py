@@ -16,9 +16,10 @@ Rs = sys.argv[1]
 add_in = sys.argv[2]
 filename = sys.argv[3:12]
 fileout = sys.argv[12]
-Rs = filename[0][8]
+print("Rs = "+Rs)
+#Rs = filename[0][8]
 print(add_in)
-print(filename)
+print("file = "+filename[0]+"  "+filename[1])
 
 solver = Output_Corr(add_in,filename,Rs)
 corr_smg = solver.SMG_Model()
