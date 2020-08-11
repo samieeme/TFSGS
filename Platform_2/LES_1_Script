@@ -1,0 +1,21 @@
+#! /bin/bash
+cd ../DNS_Data/temp  ##2_10sets
+Data_Root=$(pwd)
+FILE_DATA=$(ls)
+for item in ${FILE_DATA}
+do
+  echo $(pwd)
+  cd $item
+  echo $(pwd)
+  FILE_NAME=$(ls *.mat)
+#  echo "$FILE_NAME"
+  Data_Root=$(pwd)
+  cd ../../../Filtered_Data
+  mkdir ${item}
+  cd ${item}
+  HOME=$(pwd)
+#  echo $(pwd)
+  cd ../../Platform_2/Filtering
+  python main.py $Data_Root $FILE_NAME $HOME
+  cd ../../DNS_Data/temp   ##2_10sets
+done

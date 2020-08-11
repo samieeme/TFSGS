@@ -1,0 +1,29 @@
+##
+ADD_OUT="flt_DNS"
+if [ -e ${ADD_OUT} ]
+then
+  echo "Filter File exists"
+else
+  mkdir ${ADD_OUT}
+  #rm -rf ${ADD_OUT}
+fi
+
+ROOT=$(pwd)
+HOME=${ROOT}/${ADD_OUT}
+echo $(pwd)
+##echo $NEW_HOME
+cd ../Platform_2/Filtering
+#python main.py $ROOT $FILE_NAME $HOME
+cd ${HOME}
+FILE_NAME=$(ls *.csv)
+echo ${FILE_NAME}
+echo "Filter Done!"
+echo $HOME
+cd ../..
+MTHF=$(pwd)
+FILE_OUT=${MTHF}/"OUTPUTS"
+echo $FILE_OUT
+mkdir OUTPUTS
+echo $(pwd)
+cd ./Platform_2/LES_I
+python TFSGS_1.py 5 $HOME $FILE_NAME $FILE_OUT
